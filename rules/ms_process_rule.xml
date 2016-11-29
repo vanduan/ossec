@@ -1,0 +1,39 @@
+<!--
+    ms_process_rule.xml
+    Do an 2 - HK1 - 2016-2017
+    Author: Van Duan – Luan Vo
+    Date: 11/2016
+-->
+<group name="windows,process,">
+    <rule id="100600" level="0">
+	 <match>AUDIT_SUCCESS(592)</match>
+        <decoded_as>new-process</decoded_as>
+        <description>A new process has been created.</description>
+    </rule>
+
+    <rule id="100620" level="14">
+	<options>alert_by_email</options>
+       	<if_sid>100600</if_sid>
+		<time>20:00 - 05:00</time>
+        <description>A new process has been created not in work time.</description>
+    </rule>
+
+    <rule id="100610" level="8">
+	 	<options>no_email_alert</options>
+        <if_sid>100600</if_sid>
+	 	<time>05:00 - 20:00</time>
+        <description>A new process has been created in work time.</description>
+    </rule>
+
+    <rule id="100611" level="0">
+        <if_sid>100610</if_sid>
+		<user>SYSTEM|Administrator</user>
+        <description>A new process has been created in work time (by SYSTEM).</description>
+    </rule>
+
+    <rule id="100612" level="8">
+        <if_sid>100610</if_sid>
+		<options>no_email_alert</options>
+        <description>A new process has been created in work time (by USER - first time).</description>
+    </rule>
+</group>
